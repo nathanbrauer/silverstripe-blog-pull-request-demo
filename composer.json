@@ -1,0 +1,68 @@
+{
+    "name": "silverstripe-dev/blog-test",
+    "description": "",
+    "type": "silverstripe-recipe",
+    "require": {
+        "php": ">=8.1.0",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "nswdpc/silverstripe-elemental-modeladmin": "^0.2.0",
+        "silverstripe/recipe-cms": "^4.12@stable",
+        "silverstripe/sharedraftcontent": "^2.0",
+        "silverstripe/blog": "^3.0",
+        "dnadesign/silverstripe-elemental": "^4.0",
+        "cweagans/composer-patches": "~1.0"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.33",
+        "lekoala/silverstripe-debugbar": "^2.0",
+        "silverstripe/recipe-testing": "^2.0"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.packagist.com/dynamic/"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "ergebnis/composer-normalize": true,
+            "silverstripe/recipe-plugin": true,
+            "silverstripe/vendor-plugin": true,
+            "cweagans/composer-patches": true
+        },
+        "process-timeout": 600
+    },
+    "extra": {
+        "branch-alias": {
+            "1.x-dev": "dev-master"
+        },
+        "expose": [
+            "themes/default/src",
+            "themes/default/dist",
+            "themes/default/fonts"
+        ],
+        "project-files-installed": [
+            ".github/workflows/ci.yml",
+            "app/.htaccess",
+            "app/_config.php",
+            "app/_config/mysite.yml",
+            "app/src/Page.php",
+            "app/src/PageController.php"
+        ],
+        "public-files-installed": [
+            ".htaccess",
+            "index.php",
+            "web.config"
+        ],
+        "resources-dir": "_resources",
+        "patches": {
+            "silverstripe/blog": {
+                "Test patch for Pull Request #727 (local)": "patches/Test_for_Bugfix_Updating_BlogPostFilter_augmentSQL_to_make_use_of_modern_Versioned_methods.patch"
+            }
+        }
+    }
+}

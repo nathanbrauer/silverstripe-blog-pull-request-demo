@@ -1,0 +1,12 @@
+---
+Name: myproject
+---
+SilverStripe\Core\Manifest\ModuleManifest:
+  project: app
+
+SilverStripe\Blog\Model\BlogPost:
+  show_in_sitetree: true
+  add_default_author: false
+  elemental_keep_content_field: true
+  extensions:
+    - DNADesign\Elemental\Extensions\ElementalPageExtension

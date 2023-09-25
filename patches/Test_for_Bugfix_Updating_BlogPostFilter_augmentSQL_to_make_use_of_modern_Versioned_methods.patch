@@ -1,0 +1,60 @@
+Subject: [PATCH] Bugfix: Updating BlogPostFilter::augmentSQL to make use of modern Versioned methods.
+This resolves an issue with some modules that rely upon get_draft_site_secured, like Elemental and sharedraftcontent
+---
+Index: src/Model/BlogPostFilter.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Model/BlogPostFilter.php b/src/Model/BlogPostFilter.php
+--- a/src/Model/BlogPostFilter.php	(revision 9d3a398901cb9207a707591c7342dd90845d444f)
++++ b/src/Model/BlogPostFilter.php	(date 1695630723919)
+@@ -28,17 +28,39 @@
+      */
+     public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null)
+     {
+-        $stage = Versioned::get_stage();
++
++        if (isset($_GET['TEST_PATCH']) && $_GET['TEST_PATCH'] === 'enabled') {
++
++            if (Controller::has_curr() && Controller::curr() instanceof LeftAndMain) {
++                return;
++            }
++
++            if (Versioned::get_stage() === Versioned::LIVE ||
++                (
++                    Versioned::get_draft_site_secured() &&
++                    !Permission::check('VIEW_DRAFT_CONTENT')
++                )
++            ) {
++                $query->addWhere(sprintf(
++                    '"PublishDate" < \'%s\'',
++                    Convert::raw2sql(DBDatetime::now())
++                ));
++            }
++
++        } else {
++            $stage = Versioned::get_stage();
+
+-        if (Controller::has_curr() && Controller::curr() instanceof LeftAndMain) {
+-            return;
+-        }
++            if (Controller::has_curr() && Controller::curr() instanceof LeftAndMain) {
++                return;
++            }
+
+-        if ($stage == 'Live' || !Permission::check('VIEW_DRAFT_CONTENT')) {
+-            $query->addWhere(sprintf(
+-                '"PublishDate" < \'%s\'',
+-                Convert::raw2sql(DBDatetime::now())
+-            ));
++            if ($stage == 'Live' || !Permission::check('VIEW_DRAFT_CONTENT')) {
++                $query->addWhere(sprintf(
++                    '"PublishDate" < \'%s\'',
++                    Convert::raw2sql(DBDatetime::now())
++                ));
++            }
++
+         }
+     }
+
